@@ -9,30 +9,32 @@ def solution(s):
 
         raw_split_list.append(str_list)
 
-    for str_list in raw_split_list:
-        loop_str = str_list[0]
-        post_str = ''
+    for split_str in raw_split_list:
+        loop_str = split_str[0]
+        zip_result = ''
         cnt = 0
+        for i in range(len(split_str)):
+            if split_str[i] == loop_str:
+                cnt += 1
 
-        if len(loop_str) != 1:
-            for i in range(len(str_list)):
-                if str_list[i] == loop_str:
-                    cnt += 1
+            if i == len(split_str) - 1:
+                if cnt == 1:
+                    zip_result = f'{zip_result}{loop_str}'
                 else:
-                    post_str = ''.join(str_list[i:])
-                    break
-            if cnt == 0:
-                result = f'{loop_str}{post_str}'
-            else:
-                result = f'{cnt}{loop_str}{post_str}'
-        else:
-            result = s
+                    zip_result = f'{zip_result}{cnt}{loop_str}'
+                break
 
-        print(str_list, result)
-        zipped.append(len(result))
+            if split_str[i + 1] != loop_str:
+                if cnt == 1:
+                    zip_result = f'{zip_result}{loop_str}'
+                else:
+                    zip_result = f'{zip_result}{cnt}{loop_str}'
+                loop_str = split_str[i + 1]
+                cnt = 0
+
+        zipped.append(len(zip_result))
+
+    if len(zipped) == 0:
+        return 1
 
     return min(zipped)
-
-
-
-print(solution('aabbaccc'))
