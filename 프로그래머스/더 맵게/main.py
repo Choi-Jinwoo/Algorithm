@@ -1,35 +1,29 @@
-# TODO: 힙을이용해 다시 풀기
+import heapq
+
+
 def solution(scoville, k):
+    heap = scoville
+    heapq.heapify(heap)
+
     answer = 0
+    while True:
+        if len(heap) <= 1:
+            if heap[0] >= k:
+                break
+            answer = -1
+            break
 
-    while not is_all_food_pass(scoville, k):
-        if len(scoville) == 0:
-            return -1
+        min_val = heapq.heappop(heap)
 
-        if len(scoville) == 1:
-            if scoville[0] >= k:
-                return answer
+        if min_val >= k:
+            break
 
-            return -1
+        min_val_2 = heapq.heappop(heap)
 
-        min_1 = min(scoville)
-        scoville.remove(min_1)
-        min_2 = min(scoville)
-        scoville.remove(min_2)
-
-        scoville.insert(0, min_1 + min_2 * 2)
+        heapq.heappush(heap, min_val + min_val_2 * 2)
         answer += 1
-
 
     return answer
 
 
-def is_all_food_pass(scoville, k):
-    for s in scoville:
-        if s < k:
-            return False
-
-    return True
-
-
-print(solution([1, 2, 3, 9, 10, 12], 7))
+print(solution([8], 7))
