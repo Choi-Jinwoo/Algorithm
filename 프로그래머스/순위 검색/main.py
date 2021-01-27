@@ -35,105 +35,45 @@ def split_query(query: str):
     return query.split(' ')
 
 
-def count_filter_member(lang, position, career, food, member_level, members, q):
-    member_arr = []
-    for key in member_level:
-        if int(key) >= (int(q[4]) // 10):
-            member_arr.extend(member_level[key])
+def count_filter_member(members, q):
+    cnt = 0
+    min_index = int(q[4]) // 10
 
-    lang_arr = []
-    position_arr = []
-    career_arr = []
-    food_arr = []
-    member_level_arr = []
+    for key in members.keys():
+        if int(key) < min_index:
+            break
 
-    if q[0] == '-':
-        for val in lang.values():
-            lang_arr.extend(val)
-    else:
-        lang_arr = lang[q[0]]
+        member_arr = members[key]
 
-    if q[1] == '-':
-        for val in position.values():
-            position_arr.extend(val)
-    else:
-        position_arr = position[q[1]]
+        for member in member_arr:
+            if (member[0] == q[0] or q[0] == '-') \
+                    and (member[1] == q[1] or q[1] == '-') \
+                    and (member[2] == q[2] or q[2] == '-') \
+                    and (member[3] == q[3] or q[3] == '-') \
+                    and member[4] >= int(q[4]):
+                cnt += 1
 
-    if q[2] == '-':
-        for val in career.values():
-            career_arr.extend(val)
-    else:
-        career_arr = career[q[2]]
-
-    if q[3] == '-':
-        for val in food.values():
-            food_arr.extend(val)
-    else:
-        food_arr = food[q[3]]
-
-    for key in member_level:
-        if int(key) >= (int(q[4]) // 10):
-            member_level_arr.extend(member_level[key])
-
-    print(lang_arr)
-    print(position_arr)
-    print(career_arr)
-    print(food_arr)
-    print(member_level_arr)
-    result = set(lang_arr) & set(position_arr) & set(career_arr) & set(food_arr) & set(member_level_arr)
-    print(result)
-    print('-----')
-
-    return len(result)
+    return cnt
 
 
 def solution(info, query):
-    members = []
-
-    lang = {}
-    position = {}
-    career = {}
-    food = {}
-    member_level = {}
+    members = {}
 
     for i in range(len(info)):
         member_info = info[i].split(' ')
         member_info[4] = int(member_info[4])
 
-        members.append(member_info)
-
-        if member_info[0] in lang:
-            lang[member_info[0]].append(i)
+        if str(member_info[4] // 10) in members:
+            members[str(member_info[4] // 10)].append(member_info)
         else:
-            lang[member_info[0]] = [i]
+            members[str(member_info[4] // 10)] = [member_info]
 
-        if member_info[1] in position:
-            position[member_info[1]].append(i)
-        else:
-            position[member_info[1]] = [i]
-
-        if member_info[2] in career:
-            career[member_info[2]].append(i)
-        else:
-            career[member_info[2]] = [i]
-
-        if member_info[3] in food:
-            food[member_info[3]].append(i)
-        else:
-            food[member_info[3]] = [i]
-
-        member_level_key = str(member_info[4] // 10)
-        if member_level_key in member_level:
-            member_level[member_level_key].append(i)
-        else:
-            member_level[member_level_key] = [i]
-
-    member_level = dict(sorted(member_level.items(), key=lambda x: int(x[0])))
+    members = dict(sorted(members.items(), key=lambda x: int(x[0]), reverse=True))
 
     cnt_arr = []
     for q in query:
         q_arr = split_query(q)
-        cnt_arr.append(count_filter_member(lang, position, career, food, member_level, members, q_arr))
+        cnt_arr.append(count_filter_member(members, q_arr))
 
     return cnt_arr
 
