@@ -1,33 +1,32 @@
-from random import random
-
-
-def is_line_through_line(a, x, y):
-    if x < y / a  and y / a < x + 1:
+def is_double(d):
+    if int(d) == 0:
+        if d == 0:
+            return False
         return True
 
-    return False
-
-
-def is_line_through_block(w, h, x, y):
-    a = h / w
-    if is_line_through_line(a, x, y) or is_line_through_line(a, x, y + 1):
+    if d % int(d) != 0.0:
         return True
     return False
-
 
 
 def solution(w, h):
-    through_block_cnt = 0
+    angle = -1 * (h / w)
+    y_addition = h
 
-    for y in range(h):
-        for x in range(w):
-            if is_line_through_block(w, h, x, y):
-                through_block_cnt += 1
+    x_arr = []
+    cnt = 0
+    for y in range(h + 1):
+        x_arr.append((y - y_addition) / angle)
 
-    return w * h - through_block_cnt
+    print(x_arr)
+    cnt = 0
+    for i in range(len(x_arr) - 1):
+        cnt += int(x_arr[i]) - int(x_arr[i + 1])
+
+        if i != 0 and is_double(x_arr[i]):
+            cnt += 1
+
+    return w * h - cnt
+
 
 print(solution(8, 12))
-
-
-random.randrange(1, 2, 3)
-mean

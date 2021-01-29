@@ -32,7 +32,6 @@ def solution(n):
         if cnt == total_cnt + 1:
             break
 
-        # 밑으로 갈때 더 클 경우
         if y + y_inc > len(arr) - 1:
             x_inc, y_inc = get_inc(x_inc, y_inc)
         elif x + x_inc > len(arr) - 1:
