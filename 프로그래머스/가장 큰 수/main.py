@@ -1,44 +1,15 @@
-from functools import cmp_to_key
-
-
-def get_first_n(n):
-    if n < 10:
-        return n
-
-    return int(str(n)[0])
-
-
-def compare(a, b):
-    a_f = get_first_n(a)
-    b_f = get_first_n(b)
-
-    if a_f == b_f:
-        if a < 10 and b < 10:
-            return 0
-
-        if a > 10:
-            a = int(str(a)[1:])
-        else:
-            a = 0
-
-        if b > 10:
-            b = int(str(b)[1:])
-        else:
-            b = 0
-
-        return compare(a, b)
-
-    if a_f < b_f:
-        return 1
-
-    if a_f > b_f:
-        return -1
-
-
 def solution(numbers):
-    sorted_numbers = sorted(numbers, key=cmp_to_key(compare))
-    print(sorted_numbers)
-    return ''.join(map(str, sorted_numbers))
+    str_numbers = list(map(str, numbers))
+
+    str_numbers.sort(reverse=True)
+
+    for j in range(len(str_numbers)):
+        for i in range(len(str_numbers) - 1):
+            if str_numbers[i + 1] == str_numbers[i][:-1] and str_numbers[i][-1] < str_numbers[i + 1][-1]:
+                str_numbers[i], str_numbers[i + 1] = str_numbers[i + 1], str_numbers[i]
+
+    print(str_numbers)
+    print(''.join(str_numbers))
 
 
-print(solution([91, 30, 1000, 9, 101]))
+solution([3, 302, 34, 5, 9, 30])

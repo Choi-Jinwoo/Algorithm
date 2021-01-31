@@ -1,6 +1,10 @@
+from itertools import permutations
+from itertools import combinations
+
+
 def perm(result, arr, depth, n, k):
     if depth == k:
-        result.append(arr.copy())
+        result.append(arr.copy()[:k])
         return
 
     for i in range(depth, n):
@@ -11,6 +15,11 @@ def perm(result, arr, depth, n, k):
     return result
 
 
-nums = perm([], [1, 2, 3, 4], 0, 4, 2)
+print(perm([], [1, 2, 3, 4], 0, 4, 2))
 
-print(nums)
+p = []
+c = []
+items = [1, 2, 3, 4]
+
+print(list(permutations(items, 2)))
+print(list(combinations(items, 2)))
