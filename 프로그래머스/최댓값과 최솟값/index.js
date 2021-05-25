@@ -7,5 +7,3 @@ function solution(s) {
 
   return `${min} ${max}`
 }
-
-solution("1 2 3 4")
