@@ -1,49 +1,39 @@
-def is_contains(container_list, arr):
-    for container in container_list:
-        print(container, arr)
-        if container == arr:
-            return False
-
-        if container.find(arr) != -1:
-            return True
-
-    return False
+import itertools
 
 
 def solution(orders, course):
-    course_foods = []
-
-    for i in range(len(orders) - 1):
-        for j in range(i + 1, len(orders)):
-            duplicate_foods = list(set(orders[i]) & set(orders[j]))
-            duplicate_foods.sort()
-            duplicate_foods = ''.join(duplicate_foods)
-
-            if len(duplicate_foods) != 1 \
-                    and len(duplicate_foods) in course:
-                course_foods.append(duplicate_foods)
+    menus = []
+    [menus.append(menu) for order in orders for menu in order if menu not in menus]
+    menus.sort()
 
     result = []
-    print(course_foods)
-    for count in course:
-        mostly_showed_food = {
-            'count': 0,
-            'food': [],
-        }
 
-        for food in course_foods:
-            if len(food) == count and food not in mostly_showed_food['food']:
-                if mostly_showed_food['count'] <= course_foods.count(food):
-                    if mostly_showed_food['count'] < course_foods.count(food):
-                        mostly_showed_food['food'] = []
-                    mostly_showed_food['count'] = course_foods.count(food)
-                    mostly_showed_food['food'].append(food)
+    for course_len in course:
+        store = {}
+        for order in orders:
+            combs = list(map(''.join, list(itertools.combinations(order, course_len))))
+            for comb in combs:
+                comb = ''.join(sorted(comb))
+                if comb in store:
+                    store[comb] += 1
+                else:
+                    store[comb] = 1
 
-        if mostly_showed_food['count'] > 0:
-            result.extend(mostly_showed_food['food'])
+        max_cnt = 0
+        course = []
 
-    result.sort()
-    return result
+        for item in store.items():
+            key, value = item
+            if value > 1:
+                if value > max_cnt:
+                    max_cnt = value
+                    course = [key]
+                elif value == max_cnt:
+                    course.append(key)
+
+        result.extend(course)
+
+    return sorted(result)
 
 
-print(solution(["ABCDE", "AB", "CD", "ADE", "XYZ", "XYZ", "ACD"], [2, 3, 5]))
+print(solution(["XYZ", "XWY", "WXA"], [2, 3, 4]))

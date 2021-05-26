@@ -1,3 +1,5 @@
+# BFS
+
 def diff_char(c):
     diff_a = abs(ord(c) - ord('A'))
     diff_z = abs(ord(c) - ord('Z')) + 1
@@ -5,44 +7,27 @@ def diff_char(c):
     return min(diff_a, diff_z)
 
 
-def is_a_string(name):
-    for s in name:
-        if s != 'A':
-            return False
-    return True
-
-
 def solution(name):
-    right_cnt = 0
-    left_cnt = 0
+    queue = [['A' * len(name), 0, 0]]
+    last_index = len(name) - 1
 
-    if is_a_string(name):
-        return 0
+    while len(queue) > 0:
+        current_name, index, cnt = queue.pop(0)
+        if current_name == name:
+            return cnt - 1
 
-    for i in range(len(name)):
-        if is_a_string(name[i:]):
-            break
+        cnt += diff_char(name[index]) + 1
+        current_name = current_name[:index] + name[index] + current_name[index + 1:]
 
-        diff = diff_char(name[i])
-
-        if i == 0:
-            right_cnt += diff
+        if index - 1 < 0:
+            queue.append([current_name, last_index, cnt])
         else:
-            right_cnt += 1 + diff
+            queue.append([current_name, index - 1, cnt])
 
-    left_cnt = diff_char(name[0])
-    name = name[1:]
-    name = name[::-1]
-
-    for i in range(len(name)):
-        if is_a_string(name[i:]):
-            break
-
-        diff = diff_char(name[i])
-        left_cnt += diff + 1
-
-    print(right_cnt, left_cnt)
-    return min(right_cnt, left_cnt)
+        if index + 1 > last_index:
+            queue.append([current_name, 0, cnt])
+        else:
+            queue.append([current_name, index + 1, cnt])
 
 
-print(solution('BBBAAAB'))
+print(solution('JAN'))
