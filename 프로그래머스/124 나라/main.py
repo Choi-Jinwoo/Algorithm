@@ -1,34 +1,23 @@
-def increase(n):
-    if n == '4':
-        return '11'
-
-    last_str = n[-1]
-    if last_str == '1':
-        return n[0:len(n) - 1] + '2'
-
-    if last_str == '2':
-        return n[0:len(n) - 1] + '4'
-
-    return increase(n[0:len(n) - 1]) + '1'
-
-
 def solution(n):
-    curr_val = ''
+    char_map = ['', '1', '2', '4']
+    div, mod = divmod(n, 3)
 
-    for i in range(1, n + 1):
-        if i == 1:
-            curr_val = '1'
-        elif i == 2:
-            curr_val = '2'
-        elif i == 3:
-            curr_val = '4'
-        else:
-            curr_val = increase(curr_val)
+    result = ''
 
-    print(curr_val)
-    return curr_val
+    while True:
+        if mod == 0:
+            div -= 1
+            mod = 3
+
+        result += char_map[mod]
+
+        if div < 3:
+            result += char_map[div]
+            break
+
+        div, mod = divmod(div, 3)
+
+    return ''.join(reversed(result))
 
 
-print(solution(5))
-
-# print(increase('4'))
+solution(1000)

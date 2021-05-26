@@ -1,3 +1,6 @@
+import math
+
+
 def is_double(d):
     if int(d) == 0:
         if d == 0:
@@ -9,24 +12,28 @@ def is_double(d):
     return False
 
 
-def solution(w, h):
+def get_pass_block_cnt(w, h):
+    if w < h:
+        w, h = h, w
+
     angle = -1 * (h / w)
     y_addition = h
 
-    x_arr = []
+    pre_x = None
     cnt = 0
     for y in range(h + 1):
-        x_arr.append((y - y_addition) / angle)
+        x = (y - y_addition) / angle
 
-    print(x_arr)
-    cnt = 0
-    for i in range(len(x_arr) - 1):
-        cnt += int(x_arr[i]) - int(x_arr[i + 1])
+        if y > 0:
+            cnt += (math.ceil(x) - math.floor(pre_x))
 
-        if i != 0 and is_double(x_arr[i]):
-            cnt += 1
+        pre_x = x
 
-    return w * h - cnt
+    return cnt
 
 
-print(solution(8, 12))
+def solution(w, h):
+    gcd = math.gcd(w, h)
+
+    cnt = get_pass_block_cnt(w // gcd, h // gcd)
+    return w * h - cnt * gcd

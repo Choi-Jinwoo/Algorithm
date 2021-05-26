@@ -1,32 +1,30 @@
-from enum import Enum
+def analyze_message(message):
+    return message.split(' ')
 
 
-class Action(Enum):
-    Enter = 'Enter'
-    Leave = 'Leave'
+def compose_result_message(message_arr, nickname_map):
+    action_type, user_id = message_arr
 
-
-def analysis_message(message: str):
-    data = message.split(' ')
-    print(data)
-    str_action, user_id, nickname = data
-
-    if str_action == Action.Enter:
-        return Action.Enter, user_id, nickname
-
-    return Action.Leave, user_id, nickname
+    if action_type == 'Enter':
+        return f'{nickname_map[user_id]}님이 들어왔습니다.'
+    elif action_type == 'Leave':
+        return f'{nickname_map[user_id]}님이 나갔습니다.'
 
 
 def solution(record):
-    answer = []
-    logs = []
+    result_record = []
+    nickname_map = {}
+    for message in record:
+        user_info = analyze_message(message)
 
-    for r in record:
-        logs.append(analysis_message(r))
+        if user_info[0] == 'Change' or user_info[0] == 'Enter':
+            nickname_map[user_info[1]] = user_info[2]
 
-    print(logs)
+        if user_info[0] != 'Change':
+            result_record.append([user_info[0], user_info[1]])
 
-    return answer
+    return [compose_result_message(record, nickname_map) for record in result_record]
 
 
-solution(["Enter uid1234 Muzi", "Enter uid4567 Prodo", "Leave uid1234", "Enter uid1234 Prodo", "Change uid4567 Ryan"])
+solution(
+    ["Enter uid1234 Muzi", "Enter uid4567 Prodo", "Leave uid1234", "Enter uid1234 Prodo", "Change uid4567 Ryan"])
