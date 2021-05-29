@@ -1,27 +1,33 @@
-def solution(number: str, k):
-    number_array = list(map(int, list(number)))
-
-    del_cnt = 0
-
-    i = 0
+def solution(number, k):
     stack = []
-    while del_cnt < k:
-        if i >= len(number_array):
-            stack.pop()
-            del_cnt += 1
-        else:
-            if len(stack) <= 0:
-                stack.append(number_array[i])
+
+    cnt = 0
+    i = 0
+    while i < len(number):
+        if len(stack) <= 0 or cnt >= k:
+            stack.append(number[i])
+            i += 1
+            continue
+
+        if len(number) - i <= k - cnt:
+            print(stack, number[i])
+            if stack[-1] >= number[i]:
                 i += 1
-            elif stack[-1] < number_array[i]:
-                del_cnt += 1
-                stack.pop()
-                stack.append(number_array[i])
+                continue
             else:
-                stack.append(number_array[i])
+                stack.pop()
+                stack.append(number[i])
                 i += 1
+                continue
 
-    return ''.join(map(str, stack))
+        if stack[-1] < number[i]:
+            stack.pop()
+            cnt += 1
+        else:
+            stack.append(number[i])
+            i += 1
+
+    return ''.join(stack)
 
 
-print(solution('4177252841', 4))
+print(solution('11119', 2))
